@@ -59,6 +59,9 @@ bool hasExtension(const QString &file, const QStringList &extensions);
 // true if '/' or '\\'
 bool isSeparator(const QChar sep);
 
+// path string ends with a slash ('/' or '\\')
+bool endsWithSep(const QString &path);
+
 /*** additional tools ***/
 // checks for the absence of 'sep' duplication
 QString joinStrings(const QString &str1, const QString &str2, QChar sep);

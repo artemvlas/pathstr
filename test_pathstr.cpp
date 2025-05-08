@@ -23,6 +23,7 @@ private slots:
     void test_isRoot();
     void test_hasExtension();
     void test_isSeparator();
+    void test_endsWithSep();
 };
 
 test_pathstr::test_pathstr() {}
@@ -104,8 +105,14 @@ void test_pathstr::test_hasExtension()
 
 void test_pathstr::test_isSeparator()
 {
-    QCOMPARE(pathstr::isSeparator('/'), true);
-    QCOMPARE(pathstr::isSeparator('\\'), true);
+    QVERIFY(pathstr::isSeparator('/'));
+    QVERIFY(pathstr::isSeparator('\\'));
+}
+
+void test_pathstr::test_endsWithSep()
+{
+    QVERIFY(pathstr::endsWithSep("/folder/"));
+    QVERIFY(pathstr::endsWithSep("C:\\folder\\"));
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)

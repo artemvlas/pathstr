@@ -175,6 +175,11 @@ bool isSeparator(const QChar sep)
     return (sep == _sep) || (sep == '\\');
 }
 
+bool endsWithSep(const QString &path)
+{
+    return !path.isEmpty() && isSeparator(path.back());
+}
+
 QString joinStrings(const QString &str1, const QString &str2, QChar sep)
 {
     const bool s1Ends = str1.endsWith(sep);
