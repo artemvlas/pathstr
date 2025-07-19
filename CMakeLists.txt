@@ -22,8 +22,8 @@ add_library(pathstr STATIC
 )
 
 target_link_libraries(pathstr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
-
 target_compile_definitions(pathstr PRIVATE PATHSTR_LIBRARY)
+target_include_directories(pathstr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 if(WITH_TESTS)
   enable_testing()
