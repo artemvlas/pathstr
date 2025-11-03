@@ -16,10 +16,16 @@ namespace pathstr {
 static const QChar _sep = u'/';
 static const QChar _dot = u'.';
 
-// returns the file or folder name: "/home/user/folder/fname'/'" --> "fname"
-QString basicName(const QString &path);
+/* returns the name of the file system entry (file or folder)
+ * regardless of the separator presence at the end of the path:
+ * "/folder/entry_name'/'" --> "entry_name"
+ */
+QString entryName(const QString &path);
 
-// "/folder/file_or_folder2'/'" --> "/folder"
+/* Returns the path to the parent folder,
+ * regardless of the separator presence at the end of the path:
+ * "/folder/file_or_folder2'/'" --> "/folder"
+ */
 QString parentFolder(const QString &path);
 
 // "/folder/rootFolder/folder2/file" --> "folder2/file"
@@ -33,28 +39,34 @@ QString joinPath(const QString &absolutePath, const QString &addPath);
 
 // parentFolder/fileName.ext
 QString composeFilePath(const QString &parentFolder,
-                        const QString &fileName, const QString &ext);
+                        const QString &baseName, const QString &ext);
 
 // "/home/folder" --> "/"; "C:/Folder" --> "C:/"
 QString root(const QString &path);
 
-// "file.txt" --> "txt"
-QString suffix(const QString &file);
+// "file.txt" --> "txt"; ".hidden_file" --> ""
+QString suffix(const QString &fileName);
 
 // "file" or "file.txt" --> "file.zip"
-QString setSuffix(const QString &file, const QString &suf);
+QString setSuffix(const QString &fileName, const QString &suf);
 
 // "/folder/file.txt" --> 3
-int suffixSize(const QString &file);
+int suffixSize(const QString &fileName);
 
 // true: "/" or "X:[/]"; else false
 bool isRoot(const QString &path);
 
 // true if the file (name or path) have the "ext-value" suffix
-bool hasExtension(const QString &file, const QString &ext);
+bool hasExtension(const QString &fileName, const QString &ext);
 
 // true if the file have any extension from the list
-bool hasExtension(const QString &file, const QStringList &extensions);
+bool hasExtension(const QString &fileName, const QStringList &extensions);
+
+// true if the 'path' starts with '/' or 'X:'
+bool isAbsolute(const QString &path);
+
+// true if the path is not Absolute
+bool isRelative(const QString &path);
 
 // true if '/' or '\\'
 bool isSeparator(const QChar sep);
@@ -62,7 +74,10 @@ bool isSeparator(const QChar sep);
 // path string ends with a slash ('/' or '\\')
 bool endsWithSep(const QString &path);
 
-/*** additional tools ***/
+// true if starts with "X:"
+bool hasWindowsRoot(const QString &path);
+
+/*** Additional tools ***/
 // checks for the absence of 'sep' duplication
 QString joinStrings(const QString &str1, const QString &str2, QChar sep);
 } // namespace pathstr

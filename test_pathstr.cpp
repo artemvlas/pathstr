@@ -11,7 +11,7 @@ public:
     ~test_pathstr();
 
 private slots:
-    void test_basicName();
+    void test_entryName();
     void test_parentFolder();
     void test_relativePath();
     void test_joinPath();
@@ -22,6 +22,7 @@ private slots:
     void test_suffixSize();
     void test_isRoot();
     void test_hasExtension();
+    void test_isAbsolute();
     void test_isSeparator();
     void test_endsWithSep();
 };
@@ -30,10 +31,10 @@ test_pathstr::test_pathstr() {}
 
 test_pathstr::~test_pathstr() {}
 
-void test_pathstr::test_basicName()
+void test_pathstr::test_entryName()
 {
-    QCOMPARE(pathstr::basicName("/folder/file.txt"), "file.txt");
-    QCOMPARE(pathstr::basicName("/folder/folder2/"), "folder2");
+    QCOMPARE(pathstr::entryName("/folder/file.txt"), "file.txt");
+    QCOMPARE(pathstr::entryName("/folder/folder2/"), "folder2");
 }
 
 void test_pathstr::test_parentFolder()
@@ -101,6 +102,14 @@ void test_pathstr::test_hasExtension()
     QCOMPARE(pathstr::hasExtension("file.cpp", "ver"), false);
     QCOMPARE(pathstr::hasExtension("file.cpp", { "txt", "h", "cpp" }), true);
     QCOMPARE(pathstr::hasExtension("file.cpp", { "jpg", "h", "pdf" }), false);
+}
+
+void test_pathstr::test_isAbsolute()
+{
+    QVERIFY(pathstr::isAbsolute("/home"));
+    QVERIFY(pathstr::isAbsolute("c:/folder"));
+    QVERIFY(pathstr::isAbsolute("D:\\file.txt"));
+    QVERIFY(!pathstr::isAbsolute("folder/file.txt"));
 }
 
 void test_pathstr::test_isSeparator()

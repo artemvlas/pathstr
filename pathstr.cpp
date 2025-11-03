@@ -12,7 +12,7 @@
 #include <QStringList>
 
 namespace pathstr {
-QString basicName(const QString &path)
+QString entryName(const QString &path)
 {
     if (isRoot(path)) {
         const QChar ch = path.at(0);
@@ -68,7 +68,7 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
 QString shortenPath(const QString &path)
 {
     return isRoot(parentFolder(path)) ? path
-                                      : QStringLiteral(u"../") + basicName(path);
+                                      : QStringLiteral(u"../") + entryName(path);
 }
 
 QString joinPath(const QString &absolutePath, const QString &addPath)
@@ -76,14 +76,14 @@ QString joinPath(const QString &absolutePath, const QString &addPath)
     return joinStrings(absolutePath, addPath, _sep);
 }
 
-QString composeFilePath(const QString &parentFolder, const QString &fileName, const QString &ext)
+QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
 {
     // with sep check
-    // const QString _file = joinStrings(fileName, ext, u'.');
+    // const QString _file = joinStrings(baseName, ext, u'.');
     // return joinPath(parentFolder, _file);
 
     // no sep check
-    return parentFolder % _sep % fileName % _dot % ext;
+    return parentFolder % _sep % baseName % _dot % ext;
 }
 
 QString root(const QString &path)
@@ -93,10 +93,7 @@ QString root(const QString &path)
         return _sep;
 
     // Windows-style root "C:/"
-    if (path.size() > 1
-        && path.at(0).isLetter()
-        && path.at(1) == u':')
-    {
+    if (hasWindowsRoot(path)) {
         if (path.size() == 2)    // "C:"
             return path + _sep;  // --> "C:/"
 
@@ -108,29 +105,27 @@ QString root(const QString &path)
     return QString();
 }
 
-QString suffix(const QString &file)
+QString suffix(const QString &fileName)
 {
-    const int len = suffixSize(file);
-    return (len > 0) ? file.right(len).toLower() : QString();
+    const int len = suffixSize(fileName);
+    return (len > 0) ? fileName.right(len).toLower() : QString();
 }
 
-QString setSuffix(const QString &file, const QString &suf)
+QString setSuffix(const QString &fileName, const QString &suf)
 {
-    //if (hasExtension(_file, _suf))
-    //    return _file;
-
-    const int cur_suf_size = suffixSize(file);
+    const int cur_suf_size = suffixSize(fileName);
 
     if (cur_suf_size == 0)
-        return joinStrings(file, suf, _dot);
+        return joinStrings(fileName, suf, _dot);
 
-    QStringView chopped = QStringView(file).left(file.size() - cur_suf_size);
+    QStringView chopped = QStringView(fileName).left(fileName.size() - cur_suf_size);
     return chopped % suf;
 }
 
-int suffixSize(const QString &file)
+int suffixSize(const QString &fileName)
 {
-    const QString file_name = basicName(file); // in case: /folder.22/filename_with_no_dots
+    // in case: /folder.22/filename_with_no_dots
+    const QString file_name = entryName(fileName);
     const int dot_ind = file_name.lastIndexOf(_dot);
 
     if (dot_ind < 1)
@@ -146,28 +141,38 @@ bool isRoot(const QString &path)
         return (path.at(0) == _sep); // Linux FS root
     case 2:
     case 3:
-        return (path.at(0).isLetter() && path.at(1) == u':'); // Windows drive root
+        return hasWindowsRoot(path); // Windows drive root
     default:
         return false;
     }
 }
 
-bool hasExtension(const QString &file, const QString &ext)
+bool hasExtension(const QString &fileName, const QString &ext)
 {
-    const int dotInd = file.size() - ext.size() - 1;
+    const int dotInd = fileName.size() - ext.size() - 1;
 
-    return ((dotInd >= 0 && file.at(dotInd) == _dot)
-            && file.endsWith(ext, Qt::CaseInsensitive));
+    return ((dotInd >= 0 && fileName.at(dotInd) == _dot)
+            && fileName.endsWith(ext, Qt::CaseInsensitive));
 }
 
-bool hasExtension(const QString &file, const QStringList &extensions)
+bool hasExtension(const QString &fileName, const QStringList &extensions)
 {
     for (const QString &ext : extensions) {
-        if (hasExtension(file, ext))
+        if (hasExtension(fileName, ext))
             return true;
     }
 
     return false;
+}
+
+bool isAbsolute(const QString &path)
+{
+    return path.startsWith(_sep) || hasWindowsRoot(path);
+}
+
+bool isRelative(const QString &path)
+{
+    return !isAbsolute(path);
 }
 
 bool isSeparator(const QChar sep)
@@ -178,6 +183,13 @@ bool isSeparator(const QChar sep)
 bool endsWithSep(const QString &path)
 {
     return !path.isEmpty() && isSeparator(path.back());
+}
+
+bool hasWindowsRoot(const QString &path)
+{
+    return path.size() > 1
+           && path.at(1) == u':'
+           && path.at(0).isLetter();
 }
 
 QString joinStrings(const QString &str1, const QString &str2, QChar sep)
