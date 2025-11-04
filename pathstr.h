@@ -58,10 +58,12 @@ QString parentFolder(const QString &path);
 // relativePath("/rootFolder", "/rootFolder/folder2/file") -> "folder2/file"
 QString relativePath(const QString &rootFolder, const QString &fullPath);
 
-/* if not a root (or child of root) path, returns "../path"
- * "/home"               -> "/home"
- * "C:/fooFolder"        -> "C:/fooFolder"
- * "C:/folder/fooFolder" -> "../fooFolder"
+/* replaces intermediate folders with dots
+ * "/home"                     -> "/home"
+ * "/home/fooFolder/file.txt"  -> "/../../file.txt"
+ * "C:/fooFolder"              -> "C:/fooFolder"
+ * "C:/fooFolder/file.txt"     -> "C:/../file.txt"
+ * "fooFolder/barFolder/"      -> "../barFolder"
  */
 QString shortenPath(const QString &path);
 
