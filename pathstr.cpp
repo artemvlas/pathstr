@@ -1,17 +1,25 @@
 /*
- * A small library for handling filesystem paths as strings.
+ ******************************************************************
+ * A small library for handling filesystem paths as strings (Qt). *
+ *                                                                *
+ * artemvlas (at) proton (dot) me                                 *
+ * https://github.com/artemvlas/pathstr                           *
+ ******************************************************************
  *
  * MIT License
  * Copyright (c) 2021 - present Artem Vlasenko
- *
- * <artemvlas (at) proton (dot) me>
- * https://github.com/artemvlas
-*/
+ */
+
 #include "pathstr.h"
 #include <QStringBuilder>
 #include <QStringList>
 
 namespace pathstr {
+QString joinPath(const QString &absolutePath, const QString &addPath)
+{
+    return joinStrings(absolutePath, addPath, _sep);
+}
+
 QString entryName(const QString &path)
 {
     if (isRoot(path)) {
@@ -69,11 +77,6 @@ QString shortenPath(const QString &path)
 {
     return isRoot(parentFolder(path)) ? path
                                       : QStringLiteral(u"../") + entryName(path);
-}
-
-QString joinPath(const QString &absolutePath, const QString &addPath)
-{
-    return joinStrings(absolutePath, addPath, _sep);
 }
 
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
@@ -134,19 +137,6 @@ int suffixSize(const QString &fileName)
     return file_name.size() - dot_ind - 1;
 }
 
-bool isRoot(const QString &path)
-{
-    switch (path.length()) {
-    case 1:
-        return (path.at(0) == _sep); // Linux FS root
-    case 2:
-    case 3:
-        return hasWindowsRoot(path); // Windows drive root
-    default:
-        return false;
-    }
-}
-
 bool hasExtension(const QString &fileName, const QString &ext)
 {
     const int dotInd = fileName.size() - ext.size() - 1;
@@ -163,6 +153,26 @@ bool hasExtension(const QString &fileName, const QStringList &extensions)
     }
 
     return false;
+}
+
+bool hasWindowsRoot(const QString &path)
+{
+    return path.size() > 1
+           && path.at(1) == u':'
+           && path.at(0).isLetter();
+}
+
+bool isRoot(const QString &path)
+{
+    switch (path.length()) {
+    case 1:
+        return (path.at(0) == _sep); // Linux FS root
+    case 2:
+    case 3:
+        return hasWindowsRoot(path); // Windows drive root
+    default:
+        return false;
+    }
 }
 
 bool isAbsolute(const QString &path)
@@ -183,13 +193,6 @@ bool isSeparator(const QChar sep)
 bool endsWithSep(const QString &path)
 {
     return !path.isEmpty() && isSeparator(path.back());
-}
-
-bool hasWindowsRoot(const QString &path)
-{
-    return path.size() > 1
-           && path.at(1) == u':'
-           && path.at(0).isLetter();
 }
 
 QString joinStrings(const QString &str1, const QString &str2, QChar sep)

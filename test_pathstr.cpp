@@ -35,6 +35,7 @@ void test_pathstr::test_entryName()
 {
     QCOMPARE(pathstr::entryName("/folder/file.txt"), "file.txt");
     QCOMPARE(pathstr::entryName("/folder/folder2/"), "folder2");
+    QCOMPARE(pathstr::entryName("/folder/folder.3/"), "folder.3");
 }
 
 void test_pathstr::test_parentFolder()
@@ -73,18 +74,22 @@ void test_pathstr::test_suffix()
 {
     QCOMPARE(pathstr::suffix("file.txt"), "txt");
     QCOMPARE(pathstr::suffix("file.ver.json"), "json");
+    QCOMPARE(pathstr::suffix(".hidden_file"), "");
 }
 
 void test_pathstr::test_setSuffix()
 {
     QCOMPARE(pathstr::setSuffix("file.txt", "cpp"), "file.cpp");
     QCOMPARE(pathstr::setSuffix("file.ver.json", "json"), "file.ver.json");
+    QCOMPARE(pathstr::setSuffix(".hidden", "txt"), ".hidden.txt");
 }
 
 void test_pathstr::test_suffixSize()
 {
     QCOMPARE(pathstr::suffixSize("file.txt"), 3);
     QCOMPARE(pathstr::suffixSize("file.ver.json"), 4);
+    QCOMPARE(pathstr::suffixSize(".hidden_file"), 0);
+    QCOMPARE(pathstr::suffixSize(".file.txt"), 3);
 }
 
 void test_pathstr::test_isRoot()
