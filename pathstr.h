@@ -121,8 +121,11 @@ bool isRelative(const QString &path);
 // true if '/' or '\\'
 bool isSeparator(const QChar sep);
 
-// path string ends with a slash ('/' or '\\')
+// true if <path> string ends with a slash or backslash (path separator '/' or '\\')
 bool endsWithSep(const QString &path);
+
+// ...starts with
+bool startsWithSep(const QString &path);
 
 /*** Additional tools ***/
 /* Join strings with the specified separator ('sep'),

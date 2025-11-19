@@ -25,6 +25,7 @@ private slots:
     void test_isAbsolute();
     void test_isSeparator();
     void test_endsWithSep();
+    void test_startsWithSep();
     void test_shortenPath();
 };
 
@@ -128,6 +129,15 @@ void test_pathstr::test_endsWithSep()
 {
     QVERIFY(pathstr::endsWithSep("/folder/"));
     QVERIFY(pathstr::endsWithSep("C:\\folder\\"));
+    QVERIFY(!pathstr::endsWithSep("/folder"));
+}
+
+void test_pathstr::test_startsWithSep()
+{
+    QVERIFY(pathstr::startsWithSep("/folder"));
+    QVERIFY(pathstr::startsWithSep("\\folder\\file.txt"));
+    QVERIFY(!pathstr::startsWithSep("folder/"));
+    QVERIFY(!pathstr::startsWithSep("C:\\folder\\"));
 }
 
 void test_pathstr::test_shortenPath()
