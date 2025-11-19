@@ -57,6 +57,10 @@ void test_pathstr::test_joinPath()
     QCOMPARE(pathstr::joinPath("/home/folder", "folder2/file"), "/home/folder/folder2/file");
     QCOMPARE(pathstr::joinPath("/home/folder/", "folder2/file"), "/home/folder/folder2/file");
     QCOMPARE(pathstr::joinPath("/home/folder", "/folder2/file"), "/home/folder/folder2/file");
+    QCOMPARE(pathstr::joinPath("/home/folder", "\\folder2\\file"), "/home/folder\\folder2\\file");
+    QCOMPARE(pathstr::joinPath("/home/folder/", "\\folder2\\file"), "/home/folder\\folder2\\file");
+    QCOMPARE(pathstr::joinPath("C:\\folder\\", "\\folder2\\file"), "C:\\folder\\folder2\\file");
+    QCOMPARE(pathstr::joinPath("C:\\folder\\", "/folder2/file"), "C:\\folder/folder2/file");
 }
 
 void test_pathstr::test_composeFilePath()

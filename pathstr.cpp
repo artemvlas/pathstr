@@ -17,7 +17,25 @@
 namespace pathstr {
 QString joinPath(const QString &absolutePath, const QString &addPath)
 {
-    return joinStrings(absolutePath, addPath, _sep);
+    // 0, 1, 2
+    qint8 sep_count = 0;
+
+    if (endsWithSep(absolutePath))
+        ++sep_count;
+
+    if (startsWithSep(addPath))
+        ++sep_count;
+
+    switch (sep_count) {
+    case 1:
+        return absolutePath + addPath;
+    case 2: {
+        QStringView chopped = QStringView(absolutePath).left(absolutePath.size() - 1);
+        return chopped % addPath;
+    }
+    default: // case 0
+        return absolutePath % _sep % addPath;
+    }
 }
 
 QString entryName(const QString &path)
@@ -194,21 +212,6 @@ bool isAbsolute(const QString &path)
 bool isRelative(const QString &path)
 {
     return !isAbsolute(path);
-}
-
-bool isSeparator(const QChar sep)
-{
-    return (sep == _sep) || (sep == '\\');
-}
-
-bool endsWithSep(const QString &path)
-{
-    return !path.isEmpty() && isSeparator(path.back());
-}
-
-bool startsWithSep(const QString &path)
-{
-    return !path.isEmpty() && isSeparator(path.front());
 }
 
 QString joinStrings(const QString &str1, const QString &str2, QChar sep)

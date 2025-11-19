@@ -35,11 +35,16 @@
 #include <QString>
 
 namespace pathstr {
+/*** Constants ***/
+static const QChar _sep = u'/';
+static const QChar _dot = u'.';
+
 
 /* Joins two path strings with '/' separator, checking that the path separator is not duplicated:
  * joinPath("/absolutePath", "addPath")   -> "/absolutePath/addPath"
  * joinPath("/absolutePath/", "addPath")  -> "/absolutePath/addPath"
  * joinPath("/absolutePath/", "/addPath") -> "/absolutePath/addPath"
+ * joinPath("C:\\folder\\", "\\folder2")  -> "C:\\folder\\folder2"
  */
 QString joinPath(const QString &absolutePath, const QString &addPath);
 
@@ -119,13 +124,23 @@ bool isAbsolute(const QString &path);
 bool isRelative(const QString &path);
 
 // true if '/' or '\\'
-bool isSeparator(const QChar sep);
+inline bool isSeparator(const QChar sep)
+{
+    return (sep == _sep) || (sep == '\\');
+}
 
 // true if <path> string ends with a slash or backslash (path separator '/' or '\\')
-bool endsWithSep(const QString &path);
+inline bool endsWithSep(const QString &path)
+{
+    return !path.isEmpty() && isSeparator(path.back());
+}
 
 // ...starts with
-bool startsWithSep(const QString &path);
+inline bool startsWithSep(const QString &path)
+{
+    return !path.isEmpty() && isSeparator(path.front());
+}
+
 
 /*** Additional tools ***/
 /* Join strings with the specified separator ('sep'),
@@ -135,10 +150,6 @@ bool startsWithSep(const QString &path);
  * joinStrings("string1/", "/string2", '/') -> "string1/string2"
  */
 QString joinStrings(const QString &str1, const QString &str2, QChar sep);
-
-/*** Constants ***/
-static const QChar _sep = u'/';
-static const QChar _dot = u'.';
 
 } // namespace pathstr
 
