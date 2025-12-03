@@ -26,6 +26,8 @@ private slots:
     void test_isSeparator();
     void test_endsWithSep();
     void test_startsWithSep();
+    void test_appendSep();
+    void test_chopSep();
 };
 
 test_pathstr::test_pathstr() {}
@@ -49,6 +51,8 @@ void test_pathstr::test_relativePath()
 {
     QCOMPARE(pathstr::relativePath("/folder/rootFolder", "/folder/rootFolder/folder2/file"), "folder2/file");
     QCOMPARE(pathstr::relativePath("/folder/rootFolder/", "/folder/rootFolder/folder2/file"), "folder2/file");
+    QVERIFY(pathstr::relativePath("/rootFolder/", "/rootFolder/").isEmpty());
+    QVERIFY(pathstr::relativePath("/rootFolder", "/rootFolder/").isEmpty());
 }
 
 void test_pathstr::test_joinPath()
@@ -141,6 +145,19 @@ void test_pathstr::test_startsWithSep()
     QVERIFY(pathstr::startsWithSep("\\folder\\file.txt"));
     QVERIFY(!pathstr::startsWithSep("folder/"));
     QVERIFY(!pathstr::startsWithSep("C:\\folder\\"));
+}
+
+void test_pathstr::test_appendSep()
+{
+    QCOMPARE(pathstr::appendSep("fooFolder"), "fooFolder/");
+    QCOMPARE(pathstr::appendSep("fooFolder/"), "fooFolder/");
+}
+
+void test_pathstr::test_chopSep()
+{
+    QCOMPARE(pathstr::chopSep("fooPath/"), "fooPath");
+    QCOMPARE(pathstr::chopSep("fooPath\\"), "fooPath");
+    QCOMPARE(pathstr::chopSep("fooPath"), "fooPath");
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)

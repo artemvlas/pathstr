@@ -34,7 +34,7 @@ QString joinPath(const QString &absolutePath, const QString &addPath)
         return chopped % addPath;
     }
     default: // case 0
-        return absolutePath % _sep % addPath;
+        return absolutePath % s_sep % addPath;
     }
 }
 
@@ -42,12 +42,12 @@ QString entryName(const QString &path)
 {
     if (isRoot(path)) {
         const QChar ch = path.at(0);
-        return ch.isLetter() ? QStringLiteral(u"Drive_") + ch.toUpper() : "Root";
+        return ch.isLetter() ? QStringLiteral(u"Drive ") + ch.toUpper() : "Root";
     }
 
     // _sep == '/'
-    const bool endsWithSep = path.endsWith(_sep);
-    const int lastSepInd = path.lastIndexOf(_sep, -2);
+    const bool endsWithSep = path.endsWith(s_sep);
+    const int lastSepInd = path.lastIndexOf(s_sep, -2);
 
     if (lastSepInd == -1) {
         return endsWithSep ? path.chopped(1) : path;
@@ -59,7 +59,7 @@ QString entryName(const QString &path)
 
 QString parentFolder(const QString &path)
 {
-    const int ind = path.lastIndexOf(_sep, -2);
+    const int ind = path.lastIndexOf(s_sep, -2);
 
     switch (ind) {
     case -1: // root --> root; string'/' --> ""
@@ -81,10 +81,10 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
     if (!fullPath.startsWith(rootFolder))
         return QString();
 
-    // _sep == u'/';
-    const int cut = rootFolder.endsWith(_sep) ? rootFolder.size() - 1 : rootFolder.size();
+    // s_sep == u'/';
+    const int cut = rootFolder.endsWith(s_sep) ? rootFolder.size() - 1 : rootFolder.size();
 
-    return ((cut < fullPath.size()) && (fullPath.at(cut) == _sep)) ? fullPath.mid(cut + 1) : QString();
+    return ((cut < fullPath.size()) && (fullPath.at(cut) == s_sep)) ? fullPath.mid(cut + 1) : QString();
 
     // #2 impl. --> x2 slower due to (rootFolder + '/')
     // const QString &_root = rootFolder.endsWith('/') ? rootFolder : rootFolder + '/';
@@ -94,22 +94,22 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
 {
     // with sep check
-    // const QString _file = joinStrings(baseName, ext, u'.');
-    // return joinPath(parentFolder, _file);
+    const QString fileName = joinStrings(baseName, ext, u'.');
+    return joinPath(parentFolder, fileName);
 
     // no sep check
-    return parentFolder % _sep % baseName % _dot % ext;
+    // return parentFolder % s_sep % baseName % s_dot % ext;
 }
 
 QString root(const QString &path)
 {
     // Unix-style fs root "/"
-    if (path.startsWith(_sep))
-        return _sep;
+    if (path.startsWith(s_sep))
+        return s_sep;
 
     // Windows-style root "C:/"
     if (hasWindowsRoot(path))
-        return path.at(0).toUpper() % ':' % _sep;
+        return path.at(0).toUpper() % ':' % s_sep;
 
     // no root found
     return QString();
@@ -126,7 +126,7 @@ QString setSuffix(const QString &fileName, const QString &suf)
     const int cur_suf_size = suffixSize(fileName);
 
     if (cur_suf_size == 0)
-        return joinStrings(fileName, suf, _dot);
+        return joinStrings(fileName, suf, s_dot);
 
     QStringView chopped = QStringView(fileName).left(fileName.size() - cur_suf_size);
     return chopped % suf;
@@ -136,7 +136,7 @@ int suffixSize(const QString &fileName)
 {
     // in case: /folder.22/filename_with_no_dots
     const QString file_name = entryName(fileName);
-    const int dot_ind = file_name.lastIndexOf(_dot);
+    const int dot_ind = file_name.lastIndexOf(s_dot);
 
     if (dot_ind < 1)
         return 0;
@@ -148,7 +148,7 @@ bool hasExtension(const QString &fileName, const QString &ext)
 {
     const int dotInd = fileName.size() - ext.size() - 1;
 
-    return ((dotInd >= 0 && fileName.at(dotInd) == _dot)
+    return ((dotInd >= 0 && fileName.at(dotInd) == s_dot)
             && fileName.endsWith(ext, Qt::CaseInsensitive));
 }
 
@@ -173,10 +173,10 @@ bool isRoot(const QString &path)
 {
     switch (path.length()) {
     case 1:
-        return (path.at(0) == _sep); // Linux FS root
+        return (path.at(0) == s_sep); // Linux FS root
     case 2:
     case 3:
-        return hasWindowsRoot(path); // Windows drive root
+        return hasWindowsRoot(path);  // Windows drive root
     default:
         return false;
     }
@@ -184,7 +184,7 @@ bool isRoot(const QString &path)
 
 bool isAbsolute(const QString &path)
 {
-    return path.startsWith(_sep) || hasWindowsRoot(path);
+    return path.startsWith(s_sep) || hasWindowsRoot(path);
 }
 
 bool isRelative(const QString &path)

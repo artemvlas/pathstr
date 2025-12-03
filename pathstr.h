@@ -36,9 +36,8 @@
 
 namespace pathstr {
 /*** Constants ***/
-static const QChar _sep = u'/';
-static const QChar _dot = u'.';
-
+static const QChar s_sep = u'/';
+static const QChar s_dot = u'.';
 
 /* Joins two path strings with '/' separator, checking that the path separator is not duplicated:
  * joinPath("/absolutePath", "addPath")   -> "/absolutePath/addPath"
@@ -50,17 +49,20 @@ QString joinPath(const QString &absolutePath, const QString &addPath);
 
 /* Returns the name of the file system entry (file or folder)
  * regardless of the separator presence at the end of the path:
- * "/folder/entry_name'/'" --> "entry_name"
+ * "/folder/fooEntry/" -> "fooEntry"
+ * "/folder/fooEntry"  -> "fooEntry"
+ * "/"                 -> "Root"
+ * "C:/"               -> "Drive C"
  */
 QString entryName(const QString &path);
 
 /* Returns the path to the parent folder,
  * regardless of the separator presence at the end of the path:
- * "/folder/file_or_folder2/" --> "/folder"
- * "/folder/file_or_folder2"  --> "/folder"
- * "C:/"                      --> "C:/"
- * "/"                        --> "/"
- * "folder/"                  --> ""
+ * "/folder/file_or_folder2/" -> "/folder"
+ * "/folder/file_or_folder2"  -> "/folder"
+ * "C:/"                      -> "C:/"
+ * "/"                        -> "/"
+ * "folder/"                  -> ""
  */
 QString parentFolder(const QString &path);
 
@@ -92,17 +94,19 @@ QString setSuffix(const QString &fileName, const QString &suf);
 /* Returns the size of the suffix.
  * If the file name begins with a dot (Linux hidden file), it matters.
  * "/folder/file.txt" -> 3
- * ".hidden_file" --> 0
+ * ".hidden_file"     -> 0
  */
 int suffixSize(const QString &fileName);
 
-/* true if the 'fileName' (name or path) has the 'ext' suffix
+/* True if the <fileName> string has the <ext> suffix
  * hasExtension("file.txt", "txt") -> true
+ * hasExtension("file.txt", "cpp") -> false
  */
 bool hasExtension(const QString &fileName, const QString &ext);
 
-/* true if the 'fileName' have any extension from the list
- * hasExtension("file.txt", {"jpg", "txt", "pdf"}) -> true
+/* True if the <fileName> has any extension from the list.
+ * hasExtension("file.txt", {"jpg", "txt", "json"}) -> true
+ * hasExtension("file.txt", {"zip", "cpp", "epub"}) -> false
  */
 bool hasExtension(const QString &fileName, const QStringList &extensions);
 
@@ -112,7 +116,7 @@ bool hasWindowsRoot(const QString &path);
 // true: "/" or "X:[/]"; else false
 bool isRoot(const QString &path);
 
-// true if the 'path' starts with '/' or 'X:'
+// true if the <path> starts with '/' or 'X:'
 bool isAbsolute(const QString &path);
 
 // true if the path is not Absolute
@@ -121,7 +125,7 @@ bool isRelative(const QString &path);
 // true if '/' or '\\'
 inline bool isSeparator(const QChar sep)
 {
-    return (sep == _sep) || (sep == '\\');
+    return (sep == s_sep) || (sep == '\\');
 }
 
 // true if <path> string ends with a slash or backslash (path separator '/' or '\\')
@@ -136,6 +140,17 @@ inline bool startsWithSep(const QString &path)
     return !path.isEmpty() && isSeparator(path.front());
 }
 
+// Appends '/' if not any
+inline QString appendSep(const QString &path)
+{
+    return path.endsWith(s_sep) ? path : path + s_sep;
+}
+
+// If the <path> ends with a separator, remove it
+inline QString chopSep(const QString &path)
+{
+    return endsWithSep(path) ? path.chopped(1) : path;
+}
 
 /*** Additional tools ***/
 /* Join strings with the specified separator ('sep'),
