@@ -56,21 +56,16 @@ QString entryName(const QString &path);
 
 /* Returns the path to the parent folder,
  * regardless of the separator presence at the end of the path:
- * "/folder/file_or_folder2'/'" --> "/folder"
+ * "/folder/file_or_folder2/" --> "/folder"
+ * "/folder/file_or_folder2"  --> "/folder"
+ * "C:/"                      --> "C:/"
+ * "/"                        --> "/"
+ * "folder/"                  --> ""
  */
 QString parentFolder(const QString &path);
 
 // relativePath("/rootFolder", "/rootFolder/folder2/file") -> "folder2/file"
 QString relativePath(const QString &rootFolder, const QString &fullPath);
-
-/* replaces intermediate folders with dots
- * "/home"                     -> "/home"
- * "/home/fooFolder/file.txt"  -> "/../../file.txt"
- * "C:/fooFolder"              -> "C:/fooFolder"
- * "C:/fooFolder/file.txt"     -> "C:/../file.txt"
- * "fooFolder/barFolder/"      -> "../barFolder"
- */
-QString shortenPath(const QString &path);
 
 // parentFolder/baseName.ext
 QString composeFilePath(const QString &parentFolder,
@@ -78,7 +73,7 @@ QString composeFilePath(const QString &parentFolder,
 
 /* Returns the root of an absolute path.
  * "/home/folder" -> "/"
- * "C:/Folder"    -> "C:/"
+ * "C:/folder"    -> "C:/"
  */
 QString root(const QString &path);
 

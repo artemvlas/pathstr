@@ -91,28 +91,6 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
     // return fullPath.startsWith(_root) ? fullPath.mid(_root.size()) : QString();
 }
 
-QString shortenPath(const QString &path)
-{
-    if (isRoot(path) || isRoot(parentFolder(path)))
-        return path;
-
-    QString res;
-
-    if (isAbsolute(path))
-        res += root(path);
-
-    const QStringList parts = path.split(_sep, Qt::SkipEmptyParts);
-
-    for (int i = hasWindowsRoot(parts.at(0)) ? 1 : 0; i < parts.size(); ++i) {
-        if (i < (parts.size() - 1))
-            res += QStringLiteral("../");
-        else
-            res += parts.at(i);
-    }
-
-    return res;
-}
-
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
 {
     // with sep check

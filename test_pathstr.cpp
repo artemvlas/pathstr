@@ -26,7 +26,6 @@ private slots:
     void test_isSeparator();
     void test_endsWithSep();
     void test_startsWithSep();
-    void test_shortenPath();
 };
 
 test_pathstr::test_pathstr() {}
@@ -142,21 +141,6 @@ void test_pathstr::test_startsWithSep()
     QVERIFY(pathstr::startsWithSep("\\folder\\file.txt"));
     QVERIFY(!pathstr::startsWithSep("folder/"));
     QVERIFY(!pathstr::startsWithSep("C:\\folder\\"));
-}
-
-void test_pathstr::test_shortenPath()
-{
-    QCOMPARE(pathstr::shortenPath("/"), "/");
-    QCOMPARE(pathstr::shortenPath("C:/"), "C:/");
-    QCOMPARE(pathstr::shortenPath("/folder"), "/folder");
-    QCOMPARE(pathstr::shortenPath("C:/file.txt"), "C:/file.txt");
-    QCOMPARE(pathstr::shortenPath("/folder/file.txt"), "/../file.txt");
-    QCOMPARE(pathstr::shortenPath("/home/fooFolder/file.txt"), "/../../file.txt");
-    QCOMPARE(pathstr::shortenPath("/home/fooFolder/barFolder/"), "/../../barFolder");
-    QCOMPARE(pathstr::shortenPath("C:/fooFolder/file.txt"), "C:/../file.txt");
-    QCOMPARE(pathstr::shortenPath("fooFolder/file.txt"), "../file.txt");
-    QCOMPARE(pathstr::shortenPath("fooFolder/barFolder/file.txt"), "../../file.txt");
-    QCOMPARE(pathstr::shortenPath("fooFolder/barFolder/"), "../barFolder");
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)
