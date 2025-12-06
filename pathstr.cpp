@@ -111,7 +111,7 @@ QString renameFile(const QString &oldName, const QString &newName)
 
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
 {
-    const QString fileName = joinStrings(baseName, ext, s_dot);
+    const QString &fileName = !ext.isEmpty() ? joinStrings(baseName, ext, s_dot) : baseName;
 
     if (parentFolder.isEmpty())
         return fileName;

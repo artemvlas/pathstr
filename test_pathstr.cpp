@@ -87,15 +87,19 @@ void test_pathstr::test_composeFilePath()
 {
     using namespace pathstr;
     QCOMPARE(composeFilePath("/home/folder", "filename", "cpp"), "/home/folder/filename.cpp");
+    QCOMPARE(composeFilePath("/home/folder", ".filename", ""), "/home/folder/.filename");
     QCOMPARE(composeFilePath(QString(), "archive", "tar.gz"), "archive.tar.gz");
+    QCOMPARE(composeFilePath(QString(), "archive", ""), "archive");
 }
 
 void test_pathstr::test_renameFile()
 {
     using namespace pathstr;
     QCOMPARE(renameFile("file.docx", "new_name"), "new_name.docx");
+    QCOMPARE(renameFile("file_name", "new_name"), "new_name");
     QCOMPARE(renameFile("/folder/archive.tar.gz", "new_name"), "/folder/new_name.tar.gz");
     QCOMPARE(renameFile("folder/archive.tar.gz", "new_name.tar.gz"), "folder/new_name.tar.gz");
+    QCOMPARE(renameFile("folder/.file", "new_name"), "folder/new_name");
 }
 
 void test_pathstr::test_root()
