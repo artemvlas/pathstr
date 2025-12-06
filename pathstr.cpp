@@ -13,7 +13,6 @@
 #include "pathstr.h"
 #include <QStringBuilder>
 #include <QStringList>
-#include <QDebug>
 
 namespace pathstr {
 QString joinPath(const QString &absolutePath, const QString &addPath)
@@ -58,6 +57,17 @@ QString entryName(const QString &path)
     return path.mid(lastSepInd + 1, len);
 }
 
+QString baseName(const QString &fileName)
+{
+    const QString file_name = entryName(fileName);
+    const int suffix_size = completeSuffixSize(fileName);
+
+    if (suffix_size == 0)
+        return file_name;
+
+    return file_name.left(file_name.size() - suffix_size - 1);
+}
+
 QString parentFolder(const QString &path)
 {
     const int ind = path.lastIndexOf(s_sep, -2);
@@ -92,14 +102,21 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
     // return fullPath.startsWith(_root) ? fullPath.mid(_root.size()) : QString();
 }
 
+QString renameFile(const QString &oldName, const QString &newName)
+{
+    const QString &new_name = (completeSuffix(newName) == completeSuffix(oldName)) ? baseName(newName) : newName;
+
+    return composeFilePath(parentFolder(oldName), new_name, completeSuffix(oldName));
+}
+
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)
 {
-    // with sep check
-    const QString fileName = joinStrings(baseName, ext, u'.');
-    return joinPath(parentFolder, fileName);
+    const QString fileName = joinStrings(baseName, ext, s_dot);
 
-    // no sep check
-    // return parentFolder % s_sep % baseName % s_dot % ext;
+    if (parentFolder.isEmpty())
+        return fileName;
+
+    return joinPath(parentFolder, fileName);
 }
 
 QString root(const QString &path)

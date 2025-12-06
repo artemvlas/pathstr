@@ -49,12 +49,20 @@ QString joinPath(const QString &absolutePath, const QString &addPath);
 
 /* Returns the name of the file system entry (file or folder)
  * regardless of the separator presence at the end of the path:
- * "/folder/fooEntry/" -> "fooEntry"
- * "/folder/fooEntry"  -> "fooEntry"
- * "/"                 -> "Root"
- * "C:/"               -> "Drive C"
+ * "/folder/fooEntry/"       -> "fooEntry"
+ * "/folder/fooEntry"        -> "fooEntry"
+ * "/folder/archive.zip"     -> "archive.zip"
+ * "/"                       -> "Root"
+ * "C:/"                     -> "Drive C"
  */
 QString entryName(const QString &path);
+
+/* Returns the file name without path and complete suffix.
+ * "/folder/archive.tar.gz"     -> "archive"
+ * "/folder/archive.zip"        -> "archive"
+ * "file.name.with.dots.tar.gz" -> "file.name.with.dots"
+ */
+QString baseName(const QString &fileName);
 
 /* Returns the path to the parent folder,
  * regardless of the separator presence at the end of the path:
@@ -68,6 +76,15 @@ QString parentFolder(const QString &path);
 
 // relativePath("/rootFolder", "/rootFolder/folder2/file") -> "folder2/file"
 QString relativePath(const QString &rootFolder, const QString &fullPath);
+
+/* Changes the <oldName> filename, keeping the complete suffix and path unchanged.
+ * <oldName> is the file name or path.
+ * <newName> is the new file name.
+ *
+ * "fooFile.txt"             -> "newName.txt"
+ * "/folder/archive.tar.gz"  -> "/folder/newName.tar.gz"
+ */
+QString renameFile(const QString &oldName, const QString &newName);
 
 // parentFolder/baseName.ext
 QString composeFilePath(const QString &parentFolder,

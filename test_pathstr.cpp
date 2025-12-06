@@ -12,10 +12,12 @@ public:
 
 private slots:
     void test_entryName();
+    void test_baseName();
     void test_parentFolder();
     void test_relativePath();
     void test_joinPath();
     void test_composeFilePath();
+    void test_renameFile();
     void test_root();
     void test_suffix();
     void test_completeSuffix();
@@ -41,6 +43,16 @@ void test_pathstr::test_entryName()
     QCOMPARE(pathstr::entryName("/folder/file.txt"), "file.txt");
     QCOMPARE(pathstr::entryName("/folder/folder2/"), "folder2");
     QCOMPARE(pathstr::entryName("/folder/folder.3/"), "folder.3");
+}
+
+void test_pathstr::test_baseName()
+{
+    QCOMPARE(pathstr::baseName("/folder/file.txt"), "file");
+    QCOMPARE(pathstr::baseName("/folder/archive.tar.gz"), "archive");
+    QCOMPARE(pathstr::baseName("/folder.name/.archive.zip"), ".archive");
+    QCOMPARE(pathstr::baseName("file.name.with.dots.tar.gz"), "file.name.with.dots");
+    QCOMPARE(pathstr::baseName(".file.txt"), ".file");
+    QCOMPARE(pathstr::baseName("file_name.zip"), "file_name");
 }
 
 void test_pathstr::test_parentFolder()
@@ -71,6 +83,14 @@ void test_pathstr::test_joinPath()
 void test_pathstr::test_composeFilePath()
 {
     QCOMPARE(pathstr::composeFilePath("/home/folder", "filename", "cpp"), "/home/folder/filename.cpp");
+    QCOMPARE(pathstr::composeFilePath(QString(), "archive", "tar.gz"), "archive.tar.gz");
+}
+
+void test_pathstr::test_renameFile()
+{
+    QCOMPARE(pathstr::renameFile("file.docx", "new_name"), "new_name.docx");
+    QCOMPARE(pathstr::renameFile("/folder/archive.tar.gz", "new_name"), "/folder/new_name.tar.gz");
+    QCOMPARE(pathstr::renameFile("folder/archive.tar.gz", "new_name.tar.gz"), "folder/new_name.tar.gz");
 }
 
 void test_pathstr::test_root()
