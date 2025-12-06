@@ -47,12 +47,13 @@ void test_pathstr::test_entryName()
 
 void test_pathstr::test_baseName()
 {
-    QCOMPARE(pathstr::baseName("/folder/file.txt"), "file");
-    QCOMPARE(pathstr::baseName("/folder/archive.tar.gz"), "archive");
-    QCOMPARE(pathstr::baseName("/folder.name/.archive.zip"), ".archive");
-    QCOMPARE(pathstr::baseName("file.name.with.dots.tar.gz"), "file.name.with.dots");
-    QCOMPARE(pathstr::baseName(".file.txt"), ".file");
-    QCOMPARE(pathstr::baseName("file_name.zip"), "file_name");
+    using namespace pathstr;
+    QCOMPARE(baseName("/folder/file.txt"), "file");
+    QCOMPARE(baseName("/folder/archive.tar.gz"), "archive");
+    QCOMPARE(baseName("/folder.name/.archive.zip"), ".archive");
+    QCOMPARE(baseName("file.name.with.dots.tar.gz"), "file.name.with.dots");
+    QCOMPARE(baseName(".file.txt"), ".file");
+    QCOMPARE(baseName("file_name.zip"), "file_name");
 }
 
 void test_pathstr::test_parentFolder()
@@ -63,122 +64,135 @@ void test_pathstr::test_parentFolder()
 
 void test_pathstr::test_relativePath()
 {
-    QCOMPARE(pathstr::relativePath("/folder/rootFolder", "/folder/rootFolder/folder2/file"), "folder2/file");
-    QCOMPARE(pathstr::relativePath("/folder/rootFolder/", "/folder/rootFolder/folder2/file"), "folder2/file");
-    QVERIFY(pathstr::relativePath("/rootFolder/", "/rootFolder/").isEmpty());
-    QVERIFY(pathstr::relativePath("/rootFolder", "/rootFolder/").isEmpty());
+    using namespace pathstr;
+    QCOMPARE(relativePath("/folder/rootFolder", "/folder/rootFolder/folder2/file"), "folder2/file");
+    QCOMPARE(relativePath("/folder/rootFolder/", "/folder/rootFolder/folder2/file"), "folder2/file");
+    QVERIFY(relativePath("/rootFolder/", "/rootFolder/").isEmpty());
+    QVERIFY(relativePath("/rootFolder", "/rootFolder/").isEmpty());
 }
 
 void test_pathstr::test_joinPath()
 {
-    QCOMPARE(pathstr::joinPath("/home/folder", "folder2/file"), "/home/folder/folder2/file");
-    QCOMPARE(pathstr::joinPath("/home/folder/", "folder2/file"), "/home/folder/folder2/file");
-    QCOMPARE(pathstr::joinPath("/home/folder", "/folder2/file"), "/home/folder/folder2/file");
-    QCOMPARE(pathstr::joinPath("/home/folder", "\\folder2\\file"), "/home/folder\\folder2\\file");
-    QCOMPARE(pathstr::joinPath("/home/folder/", "\\folder2\\file"), "/home/folder\\folder2\\file");
-    QCOMPARE(pathstr::joinPath("C:\\folder\\", "\\folder2\\file"), "C:\\folder\\folder2\\file");
-    QCOMPARE(pathstr::joinPath("C:\\folder\\", "/folder2/file"), "C:\\folder/folder2/file");
+    using namespace pathstr;
+    QCOMPARE(joinPath("/home/folder", "folder2/file"), "/home/folder/folder2/file");
+    QCOMPARE(joinPath("/home/folder/", "folder2/file"), "/home/folder/folder2/file");
+    QCOMPARE(joinPath("/home/folder", "/folder2/file"), "/home/folder/folder2/file");
+    QCOMPARE(joinPath("/home/folder", "\\folder2\\file"), "/home/folder\\folder2\\file");
+    QCOMPARE(joinPath("/home/folder/", "\\folder2\\file"), "/home/folder\\folder2\\file");
+    QCOMPARE(joinPath("C:\\folder\\", "\\folder2\\file"), "C:\\folder\\folder2\\file");
+    QCOMPARE(joinPath("C:\\folder\\", "/folder2/file"), "C:\\folder/folder2/file");
 }
 
 void test_pathstr::test_composeFilePath()
 {
-    QCOMPARE(pathstr::composeFilePath("/home/folder", "filename", "cpp"), "/home/folder/filename.cpp");
-    QCOMPARE(pathstr::composeFilePath(QString(), "archive", "tar.gz"), "archive.tar.gz");
+    using namespace pathstr;
+    QCOMPARE(composeFilePath("/home/folder", "filename", "cpp"), "/home/folder/filename.cpp");
+    QCOMPARE(composeFilePath(QString(), "archive", "tar.gz"), "archive.tar.gz");
 }
 
 void test_pathstr::test_renameFile()
 {
-    QCOMPARE(pathstr::renameFile("file.docx", "new_name"), "new_name.docx");
-    QCOMPARE(pathstr::renameFile("/folder/archive.tar.gz", "new_name"), "/folder/new_name.tar.gz");
-    QCOMPARE(pathstr::renameFile("folder/archive.tar.gz", "new_name.tar.gz"), "folder/new_name.tar.gz");
+    using namespace pathstr;
+    QCOMPARE(renameFile("file.docx", "new_name"), "new_name.docx");
+    QCOMPARE(renameFile("/folder/archive.tar.gz", "new_name"), "/folder/new_name.tar.gz");
+    QCOMPARE(renameFile("folder/archive.tar.gz", "new_name.tar.gz"), "folder/new_name.tar.gz");
 }
 
 void test_pathstr::test_root()
 {
-    QCOMPARE(pathstr::root("C:/folder"), "C:/");
-    QCOMPARE(pathstr::root("d:\\"), "D:/");
-    QCOMPARE(pathstr::root("/home"), "/");
-    QCOMPARE(pathstr::root("/"), "/");
+    using namespace pathstr;
+    QCOMPARE(root("C:/folder"), "C:/");
+    QCOMPARE(root("d:\\"), "D:/");
+    QCOMPARE(root("/home"), "/");
+    QCOMPARE(root("/"), "/");
 }
 
 void test_pathstr::test_suffix()
 {
-    QCOMPARE(pathstr::suffix("file.txt"), "txt");
-    QCOMPARE(pathstr::suffix("file.ver.json"), "json");
-    QCOMPARE(pathstr::suffix(".hidden_file"), "");
+    using namespace pathstr;
+    QCOMPARE(suffix("file.txt"), "txt");
+    QCOMPARE(suffix("file.ver.json"), "json");
+    QCOMPARE(suffix(".hidden_file"), "");
 }
 
 void test_pathstr::test_completeSuffix()
 {
-    QCOMPARE(pathstr::completeSuffix("file.txt"), "txt");
-    QCOMPARE(pathstr::completeSuffix("folder/archive.tar.gz"), "tar.gz");
-    QCOMPARE(pathstr::completeSuffix("/folder.name/archive.tar.gz"), "tar.gz");
-    QCOMPARE(pathstr::completeSuffix("folder.name/file.ver.json"), "ver.json");
-    QCOMPARE(pathstr::completeSuffix("/folder.name/.archive.zip"), "zip");
-    QCOMPARE(pathstr::completeSuffix("file.name.with.dots.tar.gz"), "tar.gz");
-    QCOMPARE(pathstr::completeSuffix("folder/.hidden_file.txt"), "txt");
-    QCOMPARE(pathstr::completeSuffix("folder/.hidden_file.epub.zip"), "epub.zip");
-    QVERIFY(pathstr::completeSuffix(".hidden_file").isNull());
-    QVERIFY(pathstr::completeSuffix("folder/.1").isEmpty());
-    QVERIFY(pathstr::completeSuffix("folder/1.").isNull());
-    QVERIFY(pathstr::completeSuffix("f.").isNull());
+    using namespace pathstr;
+    QCOMPARE(completeSuffix("file.txt"), "txt");
+    QCOMPARE(completeSuffix("folder/archive.tar.gz"), "tar.gz");
+    QCOMPARE(completeSuffix("/folder.name/archive.tar.gz"), "tar.gz");
+    QCOMPARE(completeSuffix("folder.name/file.ver.json"), "ver.json");
+    QCOMPARE(completeSuffix("/folder.name/.archive.zip"), "zip");
+    QCOMPARE(completeSuffix("file.name.with.dots.tar.gz"), "tar.gz");
+    QCOMPARE(completeSuffix("folder/.hidden_file.txt"), "txt");
+    QCOMPARE(completeSuffix("folder/.hidden_file.epub.zip"), "epub.zip");
+    QVERIFY(completeSuffix(".hidden_file").isNull());
+    QVERIFY(completeSuffix("folder/.1").isEmpty());
+    QVERIFY(completeSuffix("folder/1.").isNull());
+    QVERIFY(completeSuffix("f.").isNull());
 }
 
 void test_pathstr::test_setSuffix()
 {
-    QCOMPARE(pathstr::setSuffix("file.txt", "cpp"), "file.cpp");
-    QCOMPARE(pathstr::setSuffix("file.ver.json", "json"), "file.ver.json");
-    QCOMPARE(pathstr::setSuffix(".hidden", "txt"), ".hidden.txt");
+    using namespace pathstr;
+    QCOMPARE(setSuffix("file.txt", "cpp"), "file.cpp");
+    QCOMPARE(setSuffix("file.ver.json", "json"), "file.ver.json");
+    QCOMPARE(setSuffix(".hidden", "txt"), ".hidden.txt");
 }
 
 void test_pathstr::test_suffixSize()
 {
-    QCOMPARE(pathstr::suffixSize("file.txt"), 3);
-    QCOMPARE(pathstr::suffixSize("file.ver.json"), 4);
-    QCOMPARE(pathstr::suffixSize(".hidden_file"), 0);
-    QCOMPARE(pathstr::suffixSize(".file.txt"), 3);
+    using namespace pathstr;
+    QCOMPARE(suffixSize("file.txt"), 3);
+    QCOMPARE(suffixSize("file.ver.json"), 4);
+    QCOMPARE(suffixSize(".hidden_file"), 0);
+    QCOMPARE(suffixSize(".file.txt"), 3);
 }
 
 void test_pathstr::test_completeSuffixSize()
 {
-    QCOMPARE(pathstr::completeSuffixSize("file.txt"), 3);
-    QCOMPARE(pathstr::completeSuffixSize("file.ver.json"), 8);
-    QCOMPARE(pathstr::completeSuffixSize("/folder/archive.tar.gz"), 6);
-    QCOMPARE(pathstr::completeSuffixSize("/folder.name/archive.tar.gz"), 6);
-    QCOMPARE(pathstr::completeSuffixSize("folder.name/file.ver.json"), 8);
-    QCOMPARE(pathstr::completeSuffixSize("/folder.name/.archive.zip"), 3);
-    QCOMPARE(pathstr::completeSuffixSize("file.name.with.dots.tar.gz"), 6);
-    QCOMPARE(pathstr::completeSuffixSize("folder/.hidden_file.txt"), 3);
-    QCOMPARE(pathstr::completeSuffixSize("folder/.hidden_file.epub.zip"), 8);
-    QCOMPARE(pathstr::completeSuffixSize(".hidden_file"), 0);
-    QCOMPARE(pathstr::completeSuffixSize("folder/.1"), 0);
-    QCOMPARE(pathstr::completeSuffixSize("folder/1."), 0);
-    QCOMPARE(pathstr::completeSuffixSize("f."), 0);
+    using namespace pathstr;
+    QCOMPARE(completeSuffixSize("file.txt"), 3);
+    QCOMPARE(completeSuffixSize("file.ver.json"), 8);
+    QCOMPARE(completeSuffixSize("/folder/archive.tar.gz"), 6);
+    QCOMPARE(completeSuffixSize("/folder.name/archive.tar.gz"), 6);
+    QCOMPARE(completeSuffixSize("folder.name/file.ver.json"), 8);
+    QCOMPARE(completeSuffixSize("/folder.name/.archive.zip"), 3);
+    QCOMPARE(completeSuffixSize("file.name.with.dots.tar.gz"), 6);
+    QCOMPARE(completeSuffixSize("folder/.hidden_file.txt"), 3);
+    QCOMPARE(completeSuffixSize("folder/.hidden_file.epub.zip"), 8);
+    QCOMPARE(completeSuffixSize(".hidden_file"), 0);
+    QCOMPARE(completeSuffixSize("folder/.1"), 0);
+    QCOMPARE(completeSuffixSize("folder/1."), 0);
+    QCOMPARE(completeSuffixSize("f."), 0);
 }
 
 void test_pathstr::test_isRoot()
 {
-    QCOMPARE(pathstr::isRoot("/"), true);
-    QCOMPARE(pathstr::isRoot("D:\\"), true);
-    QCOMPARE(pathstr::isRoot("c:/"), true);
-    QCOMPARE(pathstr::isRoot("E:/folder"), false);
-    QCOMPARE(pathstr::isRoot("/home"), false);
+    using namespace pathstr;
+    QVERIFY(isRoot("/"));
+    QVERIFY(isRoot("D:\\"));
+    QVERIFY(isRoot("c:/"));
+    QVERIFY(!isRoot("E:/folder"));
+    QVERIFY(!isRoot("/home"));
 }
 
 void test_pathstr::test_hasExtension()
 {
-    QCOMPARE(pathstr::hasExtension("file.cpp", "cpp"), true);
-    QCOMPARE(pathstr::hasExtension("file.cpp", "ver"), false);
-    QCOMPARE(pathstr::hasExtension("file.cpp", { "txt", "h", "cpp" }), true);
-    QCOMPARE(pathstr::hasExtension("file.cpp", { "jpg", "h", "pdf" }), false);
+    using namespace pathstr;
+    QVERIFY(hasExtension("file.cpp", "cpp"));
+    QVERIFY(!hasExtension("file.cpp", "ver"));
+    QVERIFY(hasExtension("file.cpp", { "txt", "h", "cpp" }));
+    QVERIFY(!hasExtension("file.cpp", { "jpg", "h", "pdf" }));
 }
 
 void test_pathstr::test_isAbsolute()
 {
-    QVERIFY(pathstr::isAbsolute("/home"));
-    QVERIFY(pathstr::isAbsolute("c:/folder"));
-    QVERIFY(pathstr::isAbsolute("D:\\file.txt"));
-    QVERIFY(!pathstr::isAbsolute("folder/file.txt"));
+    using namespace pathstr;
+    QVERIFY(isAbsolute("/home"));
+    QVERIFY(isAbsolute("c:/folder"));
+    QVERIFY(isAbsolute("D:\\file.txt"));
+    QVERIFY(!isAbsolute("folder/file.txt"));
 }
 
 void test_pathstr::test_isSeparator()
@@ -196,10 +210,11 @@ void test_pathstr::test_endsWithSep()
 
 void test_pathstr::test_startsWithSep()
 {
-    QVERIFY(pathstr::startsWithSep("/folder"));
-    QVERIFY(pathstr::startsWithSep("\\folder\\file.txt"));
-    QVERIFY(!pathstr::startsWithSep("folder/"));
-    QVERIFY(!pathstr::startsWithSep("C:\\folder\\"));
+    using namespace pathstr;
+    QVERIFY(startsWithSep("/folder"));
+    QVERIFY(startsWithSep("\\folder\\file.txt"));
+    QVERIFY(!startsWithSep("folder/"));
+    QVERIFY(!startsWithSep("C:\\folder\\"));
 }
 
 void test_pathstr::test_appendSep()
@@ -210,9 +225,10 @@ void test_pathstr::test_appendSep()
 
 void test_pathstr::test_chopSep()
 {
-    QCOMPARE(pathstr::chopSep("fooPath/"), "fooPath");
-    QCOMPARE(pathstr::chopSep("fooPath\\"), "fooPath");
-    QCOMPARE(pathstr::chopSep("fooPath"), "fooPath");
+    using namespace pathstr;
+    QCOMPARE(chopSep("fooPath/"), "fooPath");
+    QCOMPARE(chopSep("fooPath\\"), "fooPath");
+    QCOMPARE(chopSep("fooPath"), "fooPath");
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)

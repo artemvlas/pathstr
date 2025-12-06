@@ -165,7 +165,7 @@ inline bool isSeparator(const QChar sep)
     return (sep == s_sep) || (sep == '\\');
 }
 
-// true if <path> string ends with a slash or backslash (path separator '/' or '\\')
+// true if the <path> string ends with a slash or backslash (path separator '/' or '\\')
 inline bool endsWithSep(const QString &path)
 {
     return !path.isEmpty() && isSeparator(path.back());
@@ -188,6 +188,7 @@ inline QString chopSep(const QString &path)
 {
     return endsWithSep(path) ? path.chopped(1) : path;
 }
+
 
 /*** Additional tools ***/
 /* Join strings with the specified separator ('sep'),
