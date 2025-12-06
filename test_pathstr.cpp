@@ -18,8 +18,10 @@ private slots:
     void test_composeFilePath();
     void test_root();
     void test_suffix();
+    void test_completeSuffix();
     void test_setSuffix();
     void test_suffixSize();
+    void test_completeSuffixSize();
     void test_isRoot();
     void test_hasExtension();
     void test_isAbsolute();
@@ -86,6 +88,22 @@ void test_pathstr::test_suffix()
     QCOMPARE(pathstr::suffix(".hidden_file"), "");
 }
 
+void test_pathstr::test_completeSuffix()
+{
+    QCOMPARE(pathstr::completeSuffix("file.txt"), "txt");
+    QCOMPARE(pathstr::completeSuffix("folder/archive.tar.gz"), "tar.gz");
+    QCOMPARE(pathstr::completeSuffix("/folder.name/archive.tar.gz"), "tar.gz");
+    QCOMPARE(pathstr::completeSuffix("folder.name/file.ver.json"), "ver.json");
+    QCOMPARE(pathstr::completeSuffix("/folder.name/.archive.zip"), "zip");
+    QCOMPARE(pathstr::completeSuffix("file.name.with.dots.tar.gz"), "tar.gz");
+    QCOMPARE(pathstr::completeSuffix("folder/.hidden_file.txt"), "txt");
+    QCOMPARE(pathstr::completeSuffix("folder/.hidden_file.epub.zip"), "epub.zip");
+    QVERIFY(pathstr::completeSuffix(".hidden_file").isNull());
+    QVERIFY(pathstr::completeSuffix("folder/.1").isEmpty());
+    QVERIFY(pathstr::completeSuffix("folder/1.").isNull());
+    QVERIFY(pathstr::completeSuffix("f.").isNull());
+}
+
 void test_pathstr::test_setSuffix()
 {
     QCOMPARE(pathstr::setSuffix("file.txt", "cpp"), "file.cpp");
@@ -99,6 +117,23 @@ void test_pathstr::test_suffixSize()
     QCOMPARE(pathstr::suffixSize("file.ver.json"), 4);
     QCOMPARE(pathstr::suffixSize(".hidden_file"), 0);
     QCOMPARE(pathstr::suffixSize(".file.txt"), 3);
+}
+
+void test_pathstr::test_completeSuffixSize()
+{
+    QCOMPARE(pathstr::completeSuffixSize("file.txt"), 3);
+    QCOMPARE(pathstr::completeSuffixSize("file.ver.json"), 8);
+    QCOMPARE(pathstr::completeSuffixSize("/folder/archive.tar.gz"), 6);
+    QCOMPARE(pathstr::completeSuffixSize("/folder.name/archive.tar.gz"), 6);
+    QCOMPARE(pathstr::completeSuffixSize("folder.name/file.ver.json"), 8);
+    QCOMPARE(pathstr::completeSuffixSize("/folder.name/.archive.zip"), 3);
+    QCOMPARE(pathstr::completeSuffixSize("file.name.with.dots.tar.gz"), 6);
+    QCOMPARE(pathstr::completeSuffixSize("folder/.hidden_file.txt"), 3);
+    QCOMPARE(pathstr::completeSuffixSize("folder/.hidden_file.epub.zip"), 8);
+    QCOMPARE(pathstr::completeSuffixSize(".hidden_file"), 0);
+    QCOMPARE(pathstr::completeSuffixSize("folder/.1"), 0);
+    QCOMPARE(pathstr::completeSuffixSize("folder/1."), 0);
+    QCOMPARE(pathstr::completeSuffixSize("f."), 0);
 }
 
 void test_pathstr::test_isRoot()

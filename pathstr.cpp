@@ -13,6 +13,7 @@
 #include "pathstr.h"
 #include <QStringBuilder>
 #include <QStringList>
+#include <QDebug>
 
 namespace pathstr {
 QString joinPath(const QString &absolutePath, const QString &addPath)
@@ -121,6 +122,12 @@ QString suffix(const QString &fileName)
     return (len > 0) ? fileName.right(len).toLower() : QString();
 }
 
+QString completeSuffix(const QString &fileName)
+{
+    const int len = completeSuffixSize(fileName);
+    return (len > 0) ? fileName.right(len).toLower() : QString();
+}
+
 QString setSuffix(const QString &fileName, const QString &suf)
 {
     const int cur_suf_size = suffixSize(fileName);
@@ -142,6 +149,33 @@ int suffixSize(const QString &fileName)
         return 0;
 
     return file_name.size() - dot_ind - 1;
+}
+
+int completeSuffixSize(const QString &fileName)
+{
+    // in case: /folder.22/filename_with_no_dots
+    const QString file_name = entryName(fileName);
+    int ind_last_dot = -1;
+    int ind_prelast_dot = -1;
+
+    for (int i = (file_name.size() - 2); i >= 0; --i) {
+        if (file_name.at(i) == s_dot) {
+            if (ind_last_dot == -1) {
+                ind_last_dot = i;
+            } else {
+                ind_prelast_dot = i;
+                break;
+            }
+        }
+    }
+
+    if (ind_prelast_dot > 0)
+        return file_name.size() - ind_prelast_dot - 1;
+
+    if (ind_last_dot > 0)
+        return file_name.size() - ind_last_dot - 1;
+
+    return 0;
 }
 
 bool hasExtension(const QString &fileName, const QString &ext)

@@ -79,11 +79,22 @@ QString composeFilePath(const QString &parentFolder,
  */
 QString root(const QString &path);
 
-/* Returns the file extension (suffix).
- * "file.txt"     -> "txt"
- * ".hidden_file" -> ""
+/* Returns the suffix (extension) of the <fileName>.
+ * "file.txt"         -> "txt"
+ * "archive.tar.gz"   -> "gz"
+ * ".hidden_file"     -> ""
  */
 QString suffix(const QString &fileName);
+
+/* Returns the complete suffix (extension) of the <fileName>.
+ * The last two dots at most are taken into account.
+ *
+ * "/folder/archive.tar.gz"     -> "tar.gz"
+ * "file.name.with.dots.tar.gz" -> "tar.gz"
+ * "/folder/archive.zip"        -> "zip"
+ * "folder.name/.archive.zip"   -> "zip"
+ */
+QString completeSuffix(const QString &fileName);
 
 /* Sets or changes an existing filename suffix
  * setSuffix("file", "zip")     -> "file.zip"
@@ -97,6 +108,15 @@ QString setSuffix(const QString &fileName, const QString &suf);
  * ".hidden_file"     -> 0
  */
 int suffixSize(const QString &fileName);
+
+/* Returns the size of the complete suffix (extension).
+ * The last two dots at most are taken into account.
+ *
+ * "/folder/archive.tar.gz"     -> 6
+ * "file.name.with.dots.tar.gz" -> 6
+ * "/folder/archive.zip"        -> 3
+ */
+int completeSuffixSize(const QString &fileName);
 
 /* True if the <fileName> string has the <ext> suffix
  * hasExtension("file.txt", "txt") -> true
