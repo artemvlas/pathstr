@@ -9,14 +9,16 @@ In some cases, it performs common operations much faster, and also has more conv
 * Get the folder name or the parent folder path regardless of the separator at the end of the path.
 
 ### The project purpose:
-Creation of a minimalist tool, which is superior in speed and capabilities of stock Qt functions.
+Creation of a minimalist tool with a focus on increased performance and predictability.
 
 ### Key features:
 * Joining paths. Automatic check of the separator presence.
-* Getting a relative path.
+* Getting relative path.
 * Changing the file extension.
-* Obtaining a parent folder. Even if the path ends with the slash.
+* Changing the file name, keeping the path and suffix unchanged.
+* Obtaining a parent folder. Even if the path ends with a slash.
 * Checking a match of the file extension with the listed ones.
+* Obtaining the name of the file system entry, excluding the path.
 
 ### Usage
 Integration as a submodule can be used:
@@ -32,14 +34,19 @@ add_subdirectory(pathstr)
 Then in the code:
 ```
 #include "pathstr.h"
+using namespace pathstr;
 
-QString fooName = pathstr::entryName("/home/fooFolder/"); // -> "fooFolder"
+QString fooName = entryName("/home/fooFolder/"); // -> "fooFolder"
 
-QString newFile = pathstr::setSuffix("file.txt", "zip");  // -> "file.zip"
+QString newSuffix = setSuffix("file.txt", "zip"); // -> "file.zip"
 
-QString fullPath = pathstr::joinPath("/absolutePath", "addPath"); // -> "/absolutePath/addPath"
+QString newFile = renameFile("folder/file.docx", "newFile"); // -> folder/newFile.docx
 
-QString relPath = pathstr::relativePath("/rootFolder", "/rootFolder/folder2/file"); // -> "folder2/file"
+QString fullPath = joinPath("/absolutePath", "addPath"); // -> "/absolutePath/addPath"
+
+QString relPath = relativePath("/rootFolder", "/rootFolder/folder2/file"); // -> "folder2/file"
+
+bool has_suffix = hasExtension("file.txt", {"jpg", "txt", "json"}); // -> true
 
 ```
 
