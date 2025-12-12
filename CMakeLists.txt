@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(WITH_TESTS "Enable building of unit tests" ON)
+option(BUILD_TESTS "Enable building of unit tests" ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
@@ -25,7 +25,7 @@ target_link_libraries(pathstr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_compile_definitions(pathstr PRIVATE PATHSTR_LIBRARY)
 target_include_directories(pathstr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-if(WITH_TESTS)
+if(BUILD_TESTS)
   enable_testing()
   find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Test)
   find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Test)
@@ -34,4 +34,4 @@ if(WITH_TESTS)
   add_test(NAME test_pathstr COMMAND test_pathstr)
 
   target_link_libraries(test_pathstr PRIVATE Qt${QT_VERSION_MAJOR}::Test pathstr)
-endif(WITH_TESTS)
+endif(BUILD_TESTS)
