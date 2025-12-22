@@ -136,8 +136,10 @@ int suffixSize(const QString &fileName);
 int completeSuffixSize(const QString &fileName);
 
 /* True if the <fileName> string has the <ext> suffix
- * hasExtension("file.txt", "txt") -> true
- * hasExtension("file.txt", "cpp") -> false
+ * hasExtension("file.txt", "txt")  -> true
+ * hasExtension("file.txt", ".TXT") -> true
+ * hasExtension("file.txt", "cpp")  -> false
+ * hasExtension("folder/archive.tar.gz", ".tar.GZ") -> true
  */
 bool hasExtension(const QString &fileName, const QString &ext);
 

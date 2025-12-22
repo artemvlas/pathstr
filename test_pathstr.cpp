@@ -185,7 +185,15 @@ void test_pathstr::test_hasExtension()
 {
     using namespace pathstr;
     QVERIFY(hasExtension("file.cpp", "cpp"));
+    QVERIFY(hasExtension("file.txt", ".TXT"));
+    QVERIFY(hasExtension("folder/file.ver.json", "json"));
+    QVERIFY(hasExtension("folder.2/file.ver.json", "ver.json"));
+    QVERIFY(hasExtension("folder/.archive.tar.gz", ".tar.GZ"));
     QVERIFY(!hasExtension("file.cpp", "ver"));
+    QVERIFY(hasExtension(".file.cpp", ".Cpp"));
+    QVERIFY(hasExtension("file", ""));
+    QVERIFY(hasExtension(".file", ""));
+    QVERIFY(!hasExtension(".file", ".file"));
     QVERIFY(hasExtension("file.cpp", { "txt", "h", "cpp" }));
     QVERIFY(!hasExtension("file.cpp", { "jpg", "h", "pdf" }));
 }

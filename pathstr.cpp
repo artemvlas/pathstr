@@ -197,9 +197,17 @@ int completeSuffixSize(const QString &fileName)
 
 bool hasExtension(const QString &fileName, const QString &ext)
 {
-    const int dotInd = fileName.size() - ext.size() - 1;
+    if (ext.isEmpty())
+        return suffixSize(fileName) == 0;
 
-    return ((dotInd >= 0 && fileName.at(dotInd) == s_dot)
+    // ".ext"
+    int dotInd = fileName.size() - ext.size();
+
+    // "ext"
+    if (ext.front() != s_dot)
+        --dotInd;
+
+    return ((dotInd > 0 && fileName.at(dotInd) == s_dot)
             && fileName.endsWith(ext, Qt::CaseInsensitive));
 }
 
