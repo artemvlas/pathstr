@@ -32,6 +32,7 @@ private slots:
     void test_startsWithSep();
     void test_appendSep();
     void test_chopSep();
+    void test_toPosixPath();
 };
 
 test_pathstr::test_pathstr() {}
@@ -241,6 +242,16 @@ void test_pathstr::test_chopSep()
     QCOMPARE(chopSep("fooPath/"), "fooPath");
     QCOMPARE(chopSep("fooPath\\"), "fooPath");
     QCOMPARE(chopSep("fooPath"), "fooPath");
+}
+
+void test_pathstr::test_toPosixPath()
+{
+    QString winPath = "C:\\Windows\\System";
+    QString posPath = "C:/Windows/System";
+
+    QCOMPARE(pathstr::toPosixPath(winPath), posPath);
+    QCOMPARE(pathstr::toPosixPath(posPath), posPath);
+    QCOMPARE(pathstr::toPosixPath("C:\\Windows\\System"), posPath);
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)

@@ -37,6 +37,7 @@
 namespace pathstr {
 /*** Constants ***/
 static const QChar s_sep = u'/';
+static const QChar s_sepWin = '\\';
 static const QChar s_dot = u'.';
 
 /* Joins two path strings with '/' separator, checking that the path separator is not duplicated:
@@ -164,7 +165,7 @@ bool isRelative(const QString &path);
 // true if '/' or '\\'
 inline bool isSeparator(const QChar sep)
 {
-    return (sep == s_sep) || (sep == '\\');
+    return (sep == s_sep) || (sep == s_sepWin);
 }
 
 // true if the <path> string ends with a slash or backslash (path separator '/' or '\\')
@@ -189,6 +190,21 @@ inline QString appendSep(const QString &path)
 inline QString chopSep(const QString &path)
 {
     return endsWithSep(path) ? path.chopped(1) : path;
+}
+
+/* win ('\\') -> posix ('/') path separator
+ * C:\Windows\System -> C:/Windows/System
+ */
+inline QString& toPosixPath(QString &path)
+{
+    return path.replace(s_sepWin, s_sep);
+}
+
+// const value
+inline QString toPosixPath(const QString &path)
+{
+    QString pathCopy = path;
+    return toPosixPath(pathCopy);
 }
 
 
