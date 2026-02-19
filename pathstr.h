@@ -87,6 +87,22 @@ QString relativePath(const QString &rootFolder, const QString &fullPath);
  */
 QString renameFile(const QString &oldName, const QString &newName);
 
+/* Appends the <end> string to the file name,
+ * preserving the extension and path to the parent folder.
+ *
+ * "fooFile.txt", "-01"             -> "fooFile-01.txt"
+ * "fooFile.txt", "-01.TXT"         -> "fooFile-01.txt"
+ * "/folder/archive.tar.gz", "-01"  -> "/folder/archive-01.tar.gz"
+ */
+QString appendFileName(const QString &fileName, const QString &end);
+
+/* Prepends the <prefix> string to the file name, preserving the parent folder path.
+ *
+ * "fooFile.txt", "01-"             -> "01-fooFile.txt"
+ * "/folder/archive.tar.gz", "01-"  -> "/folder/01-archive.tar.gz"
+ */
+QString prependFileName(const QString &fileName, const QString &prefix);
+
 // parentFolder/baseName.ext
 QString composeFilePath(const QString &parentFolder,
                         const QString &baseName, const QString &ext);

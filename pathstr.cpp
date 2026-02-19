@@ -104,9 +104,25 @@ QString relativePath(const QString &rootFolder, const QString &fullPath)
 
 QString renameFile(const QString &oldName, const QString &newName)
 {
-    const QString &new_name = (completeSuffix(newName) == completeSuffix(oldName)) ? baseName(newName) : newName;
+    const QString suffix = completeSuffix(oldName);
+    const QString &resName = (completeSuffix(newName) == suffix) ? baseName(newName) : newName;
 
-    return composeFilePath(parentFolder(oldName), new_name, completeSuffix(oldName));
+    return composeFilePath(parentFolder(oldName), resName, suffix);
+}
+
+QString appendFileName(const QString &fileName, const QString &end)
+{
+    const QString resName = baseName(fileName) + end;
+
+    return renameFile(fileName, resName);
+}
+
+QString prependFileName(const QString &fileName, const QString &prefix)
+{
+    const QString parentDir = parentFolder(fileName);
+    const QString resName = prefix + entryName(fileName);
+
+    return parentDir.isEmpty() ? resName : joinPath(parentDir, resName);
 }
 
 QString composeFilePath(const QString &parentFolder, const QString &baseName, const QString &ext)

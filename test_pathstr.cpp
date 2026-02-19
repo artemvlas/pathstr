@@ -33,6 +33,8 @@ private slots:
     void test_appendSep();
     void test_chopSep();
     void test_toPosixPath();
+    void test_appendFileName();
+    void test_prependFileName();
 };
 
 test_pathstr::test_pathstr() {}
@@ -252,6 +254,21 @@ void test_pathstr::test_toPosixPath()
     QCOMPARE(pathstr::toPosixPath(winPath), posPath);
     QCOMPARE(pathstr::toPosixPath(posPath), posPath);
     QCOMPARE(pathstr::toPosixPath("C:\\Windows\\System"), posPath);
+}
+
+void test_pathstr::test_appendFileName()
+{
+    using namespace pathstr;
+    QCOMPARE(appendFileName("fooFile.txt", "-01"), "fooFile-01.txt");
+    QCOMPARE(appendFileName("fooFile.txt", "-01.TXT"), "fooFile-01.txt");
+    QCOMPARE(appendFileName("/folder/archive.tar.gz", "-01"), "/folder/archive-01.tar.gz");
+}
+
+void test_pathstr::test_prependFileName()
+{
+    using namespace pathstr;
+    QCOMPARE(prependFileName("fooFile.txt", "01-"), "01-fooFile.txt");
+    QCOMPARE(prependFileName("/folder/archive.tar.gz", "01-"), "/folder/01-archive.tar.gz");
 }
 
 QTEST_APPLESS_MAIN(test_pathstr)
